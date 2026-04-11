@@ -6,29 +6,48 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.peliculas_api.model.Pelicula;
+import com.peliculas_api.repository.PeliculaRepository;
 
 @Service
 public class PeliculaService {
 
-	private final List<Pelicula> peliculas = List.of(
-			new Pelicula(1L, "El Padrino", 1972, "Francis Ford Coppola", "Drama criminal",
-					"La familia Corleone enfrenta conflictos internos y externos dentro del crimen organizado en Nueva York."),
-			new Pelicula(2L, "Interestelar", 2014, "Christopher Nolan", "Ciencia ficcion",
-					"Un grupo de astronautas viaja a traves de un agujero de gusano para buscar un nuevo hogar para la humanidad."),
-			new Pelicula(3L, "Parasitos", 2019, "Bong Joon-ho", "Thriller",
-					"Dos familias de clases sociales opuestas quedan unidas por una relacion tan oportunista como peligrosa."),
-			new Pelicula(4L, "El viaje de Chihiro", 2001, "Hayao Miyazaki", "Animacion",
-					"Una nina entra en un mundo espiritual y debe encontrar la manera de rescatar a sus padres y volver a casa."),
-			new Pelicula(5L, "La La Land", 2016, "Damien Chazelle", "Musical",
-					"Una actriz y un musico luchan por cumplir sus suenos mientras intentan sostener su relacion en Los Angeles."));
+	private final PeliculaRepository peliculaRepository;
+
+	public PeliculaService(PeliculaRepository peliculaRepository) {
+		this.peliculaRepository = peliculaRepository;
+	}
 
 	public List<Pelicula> obtenerTodas() {
-		return peliculas;
+		return peliculaRepository.findAllByOrderByIdAsc();
 	}
 
 	public Optional<Pelicula> obtenerPorId(Long id) {
-		return peliculas.stream()
-				.filter(pelicula -> pelicula.getId().equals(id))
-				.findFirst();
+		return peliculaRepository.findById(id);
+	}
+
+	public Pelicula crear(Pelicula pelicula) {
+		pelicula.setId(null);
+		return peliculaRepository.save(pelicula);
+	}
+
+	public Optional<Pelicula> actualizar(Long id, Pelicula peliculaActualizada) {
+		return peliculaRepository.findById(id)
+				.map(peliculaExistente -> {
+					peliculaExistente.setTitulo(peliculaActualizada.getTitulo());
+					peliculaExistente.setAnio(peliculaActualizada.getAnio());
+					peliculaExistente.setDirector(peliculaActualizada.getDirector());
+					peliculaExistente.setGenero(peliculaActualizada.getGenero());
+					peliculaExistente.setSinopsis(peliculaActualizada.getSinopsis());
+					return peliculaRepository.save(peliculaExistente);
+				});
+	}
+
+	public boolean eliminar(Long id) {
+		if (!peliculaRepository.existsById(id)) {
+			return false;
+		}
+
+		peliculaRepository.deleteById(id);
+		return true;
 	}
 }
