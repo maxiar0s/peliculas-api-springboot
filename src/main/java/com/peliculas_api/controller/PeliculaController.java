@@ -23,8 +23,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.peliculas_api.model.Pelicula;
 import com.peliculas_api.service.PeliculaService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/peliculas")
+@Tag(name = "Peliculas", description = "Endpoints para consultar y administrar peliculas")
 public class PeliculaController {
 
 	private final PeliculaService peliculaService;
@@ -35,6 +43,8 @@ public class PeliculaController {
 		this.peliculaModelAssembler = peliculaModelAssembler;
 	}
 
+	@Operation(summary = "Listar peliculas", description = "Obtiene todas las peliculas registradas")
+	@ApiResponse(responseCode = "200", description = "Peliculas obtenidas correctamente")
 	@GetMapping
 	public CollectionModel<EntityModel<Pelicula>> obtenerPeliculas() {
 		List<EntityModel<Pelicula>> peliculas = peliculaService.obtenerTodas().stream()
@@ -45,6 +55,10 @@ public class PeliculaController {
 				linkTo(methodOn(PeliculaController.class).obtenerPeliculas()).withSelfRel());
 	}
 
+	@Operation(summary = "Buscar pelicula por id", description = "Obtiene una pelicula especifica a partir de su identificador")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Pelicula encontrada"),
+			@ApiResponse(responseCode = "404", description = "Pelicula no encontrada", content = @Content(schema = @Schema(implementation = Map.class))) })
 	@GetMapping("/{id}")
 	public ResponseEntity<?> obtenerPeliculaPorId(@PathVariable Long id) {
 		return peliculaService.obtenerPorId(id)
@@ -53,6 +67,8 @@ public class PeliculaController {
 						.body(Map.of("mensaje", "No se encontro una pelicula con id " + id)));
 	}
 
+	@Operation(summary = "Crear pelicula", description = "Registra una nueva pelicula en el sistema")
+	@ApiResponse(responseCode = "201", description = "Pelicula creada correctamente")
 	@PostMapping
 	public ResponseEntity<EntityModel<Pelicula>> crearPelicula(@RequestBody Pelicula pelicula) {
 		Pelicula peliculaCreada = peliculaService.crear(pelicula);
@@ -61,6 +77,10 @@ public class PeliculaController {
 				.body(peliculaModelAssembler.toModel(peliculaCreada));
 	}
 
+	@Operation(summary = "Actualizar pelicula", description = "Actualiza los datos de una pelicula existente")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Pelicula actualizada correctamente"),
+			@ApiResponse(responseCode = "404", description = "Pelicula no encontrada", content = @Content(schema = @Schema(implementation = Map.class))) })
 	@PutMapping("/{id}")
 	public ResponseEntity<?> actualizarPelicula(@PathVariable Long id, @RequestBody Pelicula pelicula) {
 		return peliculaService.actualizar(id, pelicula)
@@ -69,6 +89,10 @@ public class PeliculaController {
 						.body(Map.of("mensaje", "No se encontro una pelicula con id " + id)));
 	}
 
+	@Operation(summary = "Eliminar pelicula", description = "Elimina una pelicula por su identificador")
+	@ApiResponses({
+			@ApiResponse(responseCode = "204", description = "Pelicula eliminada correctamente"),
+			@ApiResponse(responseCode = "404", description = "Pelicula no encontrada", content = @Content(schema = @Schema(implementation = Map.class))) })
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> eliminarPelicula(@PathVariable Long id) {
 		if (peliculaService.eliminar(id)) {
