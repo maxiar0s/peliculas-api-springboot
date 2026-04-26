@@ -21,8 +21,10 @@ class PeliculaControllerTest {
 	void deberiaRetornarTodasLasPeliculas() throws Exception {
 		mockMvc.perform(get("/peliculas"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.length()").value(5))
-				.andExpect(jsonPath("$[0].titulo").value("El Padrino"));
+				.andExpect(jsonPath("$._embedded.peliculas.length()").value(5))
+				.andExpect(jsonPath("$._embedded.peliculas[0].titulo").value("El Padrino"))
+				.andExpect(jsonPath("$._embedded.peliculas[0]._links.self.href").exists())
+				.andExpect(jsonPath("$._links.self.href").exists());
 	}
 
 	@Test
@@ -30,7 +32,9 @@ class PeliculaControllerTest {
 		mockMvc.perform(get("/peliculas/2"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.id").value(2))
-				.andExpect(jsonPath("$.titulo").value("Interestelar"));
+				.andExpect(jsonPath("$.titulo").value("Interestelar"))
+				.andExpect(jsonPath("$._links.self.href").exists())
+				.andExpect(jsonPath("$._links.peliculas.href").exists());
 	}
 
 	@Test

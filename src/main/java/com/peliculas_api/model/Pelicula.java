@@ -7,8 +7,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import org.springframework.hateoas.server.core.Relation;
+
 @Entity
 @Table(name = "peliculas")
+@Relation(itemRelation = "pelicula", collectionRelation = "peliculas")
 public class Pelicula {
 
 	@Id
