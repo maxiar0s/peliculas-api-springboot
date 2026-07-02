@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.peliculas_api.model.Pelicula;
+import com.peliculas_api.model.Resena;
 import com.peliculas_api.service.PeliculaService;
+import com.peliculas_api.service.ResenaService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -37,10 +39,13 @@ public class PeliculaController {
 
 	private final PeliculaService peliculaService;
 	private final PeliculaModelAssembler peliculaModelAssembler;
+	private final ResenaService resenaService;
 
-	public PeliculaController(PeliculaService peliculaService, PeliculaModelAssembler peliculaModelAssembler) {
+	public PeliculaController(PeliculaService peliculaService, PeliculaModelAssembler peliculaModelAssembler,
+			ResenaService resenaService) {
 		this.peliculaService = peliculaService;
 		this.peliculaModelAssembler = peliculaModelAssembler;
+		this.resenaService = resenaService;
 	}
 
 	@Operation(summary = "Listar peliculas", description = "Obtiene todas las peliculas registradas")
@@ -85,6 +90,32 @@ public class PeliculaController {
 	public ResponseEntity<?> actualizarPelicula(@PathVariable Long id, @RequestBody Pelicula pelicula) {
 		return peliculaService.actualizar(id, pelicula)
 				.<ResponseEntity<?>>map(peliculaActualizada -> ResponseEntity.ok(peliculaModelAssembler.toModel(peliculaActualizada)))
+				.orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+						.body(Map.of("mensaje", "No se encontro una pelicula con id " + id)));
+	}
+
+	@Operation(summary = "Listar resenas de una pelicula", description = "Obtiene las resenas de usuarios para una pelicula")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Resenas obtenidas correctamente"),
+			@ApiResponse(responseCode = "404", description = "Pelicula no encontrada", content = @Content(schema = @Schema(implementation = Map.class))) })
+	@GetMapping("/{id}/resenas")
+	public ResponseEntity<?> obtenerResenas(@PathVariable Long id) {
+		if (peliculaService.obtenerPorId(id).isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(Map.of("mensaje", "No se encontro una pelicula con id " + id));
+		}
+
+		return ResponseEntity.ok(resenaService.obtenerPorPelicula(id));
+	}
+
+	@Operation(summary = "Crear resena", description = "Registra una resena y puntuacion para una pelicula")
+	@ApiResponses({
+			@ApiResponse(responseCode = "201", description = "Resena creada correctamente"),
+			@ApiResponse(responseCode = "404", description = "Pelicula no encontrada", content = @Content(schema = @Schema(implementation = Map.class))) })
+	@PostMapping("/{id}/resenas")
+	public ResponseEntity<?> crearResena(@PathVariable Long id, @RequestBody Resena resena) {
+		return resenaService.crear(id, resena)
+				.<ResponseEntity<?>>map(resenaCreada -> ResponseEntity.status(HttpStatus.CREATED).body(resenaCreada))
 				.orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
 						.body(Map.of("mensaje", "No se encontro una pelicula con id " + id)));
 	}

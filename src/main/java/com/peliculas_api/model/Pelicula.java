@@ -33,16 +33,29 @@ public class Pelicula {
 	@Column(nullable = false, length = 1000)
 	private String sinopsis;
 
+	@Column(name = "imagen_url", length = 500)
+	private String imagenUrl;
+
+	@Column(name = "imdb_url", length = 500)
+	private String imdbUrl;
+
+	@Column(name = "rotten_tomatoes_url", length = 500)
+	private String rottenTomatoesUrl;
+
 	public Pelicula() {
 	}
 
-	public Pelicula(Long id, String titulo, int anio, String director, String genero, String sinopsis) {
+	public Pelicula(Long id, String titulo, int anio, String director, String genero, String sinopsis, String imagenUrl,
+			String imdbUrl, String rottenTomatoesUrl) {
 		this.id = id;
 		this.titulo = titulo;
 		this.anio = anio;
 		this.director = director;
 		this.genero = genero;
 		this.sinopsis = sinopsis;
+		this.imagenUrl = imagenUrl;
+		this.imdbUrl = imdbUrl;
+		this.rottenTomatoesUrl = rottenTomatoesUrl;
 	}
 
 	public Long getId() {
@@ -91,5 +104,29 @@ public class Pelicula {
 
 	public void setSinopsis(String sinopsis) {
 		this.sinopsis = sinopsis;
+	}
+
+	public String getImagenUrl() {
+		return imagenUrl;
+	}
+
+	public void setImagenUrl(String imagenUrl) {
+		this.imagenUrl = imagenUrl;
+	}
+
+	public String getImdbUrl() {
+		return imdbUrl;
+	}
+
+	public void setImdbUrl(String imdbUrl) {
+		this.imdbUrl = imdbUrl;
+	}
+
+	public String getRottenTomatoesUrl() {
+		return rottenTomatoesUrl;
+	}
+
+	public void setRottenTomatoesUrl(String rottenTomatoesUrl) {
+		this.rottenTomatoesUrl = rottenTomatoesUrl;
 	}
 }

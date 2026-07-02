@@ -34,13 +34,13 @@ class PeliculaServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		pelicula = new Pelicula(1L, "Matrix", 1999, "Lana Wachowski", "Ciencia ficcion",
+		pelicula = crearPelicula(1L, "Matrix", 1999, "Lana Wachowski", "Ciencia ficcion",
 				"Un programador descubre la verdadera naturaleza de su realidad.");
 	}
 
 	@Test
 	void deberiaCrearPeliculaConIdNuloAntesDeGuardar() {
-		Pelicula nuevaPelicula = new Pelicula(99L, "Origen", 2010, "Christopher Nolan", "Ciencia ficcion",
+		Pelicula nuevaPelicula = crearPelicula(99L, "Origen", 2010, "Christopher Nolan", "Ciencia ficcion",
 				"Un ladron roba secretos dentro de los suenos.");
 
 		when(peliculaRepository.save(any(Pelicula.class))).thenAnswer(invocation -> {
@@ -59,7 +59,7 @@ class PeliculaServiceTest {
 
 	@Test
 	void deberiaActualizarPeliculaCuandoExiste() {
-		Pelicula cambios = new Pelicula(null, "Matrix Recargado", 2003, "Lana Wachowski", "Accion",
+		Pelicula cambios = crearPelicula(null, "Matrix Recargado", 2003, "Lana Wachowski", "Accion",
 				"Neo enfrenta una nueva amenaza.");
 
 		when(peliculaRepository.findById(1L)).thenReturn(Optional.of(pelicula));
@@ -83,5 +83,12 @@ class PeliculaServiceTest {
 
 		assertFalse(resultado);
 		verify(peliculaRepository, times(1)).existsById(7L);
+	}
+
+	private Pelicula crearPelicula(Long id, String titulo, int anio, String director, String genero, String sinopsis) {
+		return new Pelicula(id, titulo, anio, director, genero, sinopsis,
+				"http://localhost:9000/peliculas-imagenes/test.svg",
+				"https://www.imdb.com/title/test/",
+				"https://www.rottentomatoes.com/m/test");
 	}
 }

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 480" role="img" aria-label="Poster El Padrino">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#2b1a17"/><stop offset="1" stop-color="#0f172a"/></linearGradient></defs>
+  <rect width="320" height="480" fill="url(#g)"/>
+  <circle cx="250" cy="88" r="54" fill="#ffffff22"/>
+  <rect x="34" y="300" width="252" height="92" rx="18" fill="#00000055"/>
+  <text x="160" y="350" fill="#f8fafc" font-family="Arial, sans-serif" font-size="34" font-weight="700" text-anchor="middle">El Padrino</text>
+  <text x="160" y="382" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="16" text-anchor="middle">Peliculas API</text>
+</svg>
