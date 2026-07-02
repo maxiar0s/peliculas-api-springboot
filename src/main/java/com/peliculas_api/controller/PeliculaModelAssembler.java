@@ -16,6 +16,7 @@ public class PeliculaModelAssembler implements RepresentationModelAssembler<Peli
 	public EntityModel<Pelicula> toModel(Pelicula pelicula) {
 		return EntityModel.of(pelicula,
 				linkTo(methodOn(PeliculaController.class).obtenerPeliculaPorId(pelicula.getId())).withSelfRel(),
+				linkTo(methodOn(PeliculaController.class).obtenerResenas(pelicula.getId())).withRel("resenas"),
 				linkTo(methodOn(PeliculaController.class).obtenerPeliculas()).withRel("peliculas"));
 	}
 }

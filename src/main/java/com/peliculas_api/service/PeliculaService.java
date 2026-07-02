@@ -38,6 +38,9 @@ public class PeliculaService {
 					peliculaExistente.setDirector(peliculaActualizada.getDirector());
 					peliculaExistente.setGenero(peliculaActualizada.getGenero());
 					peliculaExistente.setSinopsis(peliculaActualizada.getSinopsis());
+					peliculaExistente.setImagenUrl(peliculaActualizada.getImagenUrl());
+					peliculaExistente.setImdbUrl(peliculaActualizada.getImdbUrl());
+					peliculaExistente.setRottenTomatoesUrl(peliculaActualizada.getRottenTomatoesUrl());
 					return peliculaRepository.save(peliculaExistente);
 				});
 	}

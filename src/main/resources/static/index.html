@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Peliculas API</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="hero">
+    <p class="eyebrow">Catalogo colaborativo</p>
+    <h1>Peliculas recomendadas</h1>
+    <p>Explora peliculas, consulta calificaciones externas en IMDb y Rotten Tomatoes, y deja tu propia resena.</p>
+  </header>
+  <main>
+    <section id="peliculas" class="grid" aria-live="polite"></section>
+  </main>
+  <template id="pelicula-template">
+    <article class="card">
+      <img class="poster" alt="">
+      <div class="content">
+        <p class="genre"></p>
+        <h2></h2>
+        <p class="meta"></p>
+        <p class="synopsis"></p>
+        <div class="links">
+          <a class="imdb" target="_blank" rel="noreferrer">IMDb</a>
+          <a class="rt" target="_blank" rel="noreferrer">Rotten Tomatoes</a>
+        </div>
+        <section class="reviews">
+          <h3>Resenas</h3>
+          <div class="review-list"></div>
+          <form>
+            <input name="autor" maxlength="80" placeholder="Tu nombre" aria-label="Tu nombre">
+            <select name="puntuacion" aria-label="Puntuacion">
+              <option value="5">5 estrellas</option>
+              <option value="4">4 estrellas</option>
+              <option value="3">3 estrellas</option>
+              <option value="2">2 estrellas</option>
+              <option value="1">1 estrella</option>
+            </select>
+            <textarea name="comentario" maxlength="1000" placeholder="Escribe tu resena" aria-label="Escribe tu resena" required></textarea>
+            <button type="submit">Publicar resena</button>
+          </form>
+        </section>
+      </div>
+    </article>
+  </template>
+  <script src="/app.js"></script>
+</body>
+</html>
